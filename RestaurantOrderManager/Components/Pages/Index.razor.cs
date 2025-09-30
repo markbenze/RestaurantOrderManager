@@ -6,9 +6,10 @@ namespace RestaurantOrderManager.Components.Pages;
 
 public partial class Index
 {
-    public List<Table> Tables { get; set; }
+    private List<Table> Tables { get; set; }
 
-    [Inject] public TableService TableService { get; set; }
+    [Inject] 
+    public TableService TableService { get; set; }
 
     protected override Task OnInitializedAsync()
     {

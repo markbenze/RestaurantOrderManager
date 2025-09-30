@@ -1,11 +1,23 @@
-﻿@page "/index"
+﻿@page "/"
 @rendermode InteractiveServer
 
-<h3>Index</h3>
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var table in Tables)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card border shadow-sm bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Table @table.Id</h5>
+                        <p class="fw-bold"> Status: @table.Status</p>
+                        <p>@(table.OrderNumber != 0 ? $"Order #{table.OrderNumber}" : "No Active Order")</p>
+                        <button class="btn btn-outline-primary w-100" @onclick="() => TableService.ToggleTable(table.Id)">Toggle Table</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
 
-<p>This is the home page of the service</p>
 
-@foreach (var table in Tables)
-{
-    <p>@table.Id/@table.State/<button @onclick="() => TableService.ToggleTable(table.Id)">Toggle Table</button></p>
-}
+

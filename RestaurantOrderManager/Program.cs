@@ -6,7 +6,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
-    .Services.AddScoped<TableService>();
+    .Services
+        .AddScoped<TableService>()
+        .AddScoped<MenuService>()
+        .AddScoped<OrderService>();
 
 var app = builder.Build();
 
