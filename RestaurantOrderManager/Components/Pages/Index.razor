@@ -1,0 +1,11 @@
+﻿@page "/index"
+@rendermode InteractiveServer
+
+<h3>Index</h3>
+
+<p>This is the home page of the service</p>
+
+@foreach (var table in Tables)
+{
+    <p>@table.Id/@table.State/<button @onclick="() => TableService.ToggleTable(table.Id)">Toggle Table</button></p>
+}
