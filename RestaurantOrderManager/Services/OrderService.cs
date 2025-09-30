@@ -14,20 +14,17 @@ public class OrderService
         this._menuService = menuService;
     }
 
-    public Order CreateOrder(int tableId, List<int> menuItemIds)
+    public Order CreateOrder(int tableId, List<CartItem> cartItems)
     {
         var order = new Order
         {
             Id = _orders.Count + 1,
             TableId = tableId,
             State = OrderState.Pending,
-            MenuItems = menuItemIds
-                .Select(id => _menuService.GetMenuItem(id))
-                .Where(id => id != null)
-                .ToList()!,
+            CartItems = cartItems
         };
 
-        order.Total = order.MenuItems.Sum(item => item.Price); ;
+        order.Total = order.CartItems.Sum(item => item.Total);
 
         return order;
     }

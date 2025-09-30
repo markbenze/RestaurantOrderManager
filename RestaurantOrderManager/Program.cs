@@ -9,7 +9,8 @@ builder.Services.AddRazorComponents()
     .Services
         .AddScoped<TableService>()
         .AddScoped<MenuService>()
-        .AddScoped<OrderService>();
+        .AddScoped<OrderService>()
+        .AddScoped<CartService>();
 
 var app = builder.Build();
 

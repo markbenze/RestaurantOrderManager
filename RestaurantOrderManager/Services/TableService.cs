@@ -30,21 +30,21 @@ public class TableService
         return _tables.FirstOrDefault(t => t.Id == id);
     }
 
-    public void ToggleTable(int id)
-    {
-        Table? table = GetTable(id);
-        if (table != null)
-        {
-            if (table.Status == TableStatus.Free)
-            {
-                table.Status = TableStatus.Occupied;
-                table.OrderNumber = new Random().Next(1000, 9999);
-            }
-            else if (table.Status != TableStatus.Free)
-            {
-                table.Status = TableStatus.Free;
-                table.OrderNumber = 0;
-            }
-        }
-    }
+    // public void ToggleTable(int id)
+    // {
+    //     Table? table = GetTable(id);
+    //     if (table != null)
+    //     {
+    //         if (table.Status == TableStatus.Free)
+    //         {
+    //             table.Status = TableStatus.Occupied;
+    //             table.OrderNumber = new Random().Next(1000, 9999);
+    //         }
+    //         else if (table.Status != TableStatus.Free)
+    //         {
+    //             table.Status = TableStatus.Free;
+    //             table.OrderNumber = 0;
+    //         }
+    //     }
+    // }
 }

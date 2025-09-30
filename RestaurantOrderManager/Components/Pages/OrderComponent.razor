@@ -1,0 +1,38 @@
+﻿@page "/order/{TableId:int}"
+@rendermode InteractiveServer
+
+@if (PlacedOrder != null)
+{
+    <h3>Order Confirmed</h3>
+    <ul>
+        @foreach (var item in PlacedOrder.CartItems)
+        {
+            <li>@item.Name x @item.Quantity = @item.Total €</li>
+        }
+    </ul>
+    <p><strong>Total:</strong> @PlacedOrder.Total €</p>
+}
+else
+{
+    <select @bind="SelectedMenuItemId">
+        <option value="">-- Select item --</option>
+        @foreach (var menu in MenuService.GetMenu())
+        {
+            <option value="@menu.Id">@menu.Name (@menu.Price €)</option>
+        }
+    </select>
+    <input type="number" @bind="Quantity" min="1" />
+
+    <button @onclick="AddItem">Add to Cart</button>
+
+    <ul>
+        @foreach (var item in CartService.CartItems)
+        {
+            <li>@item.Name x @item.Quantity = @item.Total € 
+                <button @onclick="() => RemoveItem(item.Id)">Remove</button>
+            </li>
+        }
+    </ul>
+
+    <button @onclick="ConfirmOrder" disabled="@(CartService.CartItems.Count == 0)">Confirm Order</button>
+}

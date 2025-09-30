@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using RestaurantOrderManager.Models
 @rendermode InteractiveServer
 
 <div class="container mt-4">
@@ -11,13 +12,17 @@
                         <h5 class="card-title">Table @table.Id</h5>
                         <p class="fw-bold"> Status: @table.Status</p>
                         <p>@(table.OrderNumber != 0 ? $"Order #{table.OrderNumber}" : "No Active Order")</p>
-                        <button class="btn btn-outline-primary w-100" @onclick="() => TableService.ToggleTable(table.Id)">Toggle Table</button>
+                        @if (@table.Status == TableStatus.Free)
+                        {
+                            <NavLink class="btn btn-outline-primary w-100" href="@($"/order/{table.Id}")">Take Order</NavLink>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary w-100" disabled="">Occupied/Reserved</button>
+                        }
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
-
-
-

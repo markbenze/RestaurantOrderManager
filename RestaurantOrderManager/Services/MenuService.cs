@@ -37,4 +37,9 @@ public class MenuService
     {
         return Menu.FirstOrDefault(p => p.Id == id);
     }
+    
+    public List<MenuItem> GetMenu()
+    {
+        return Menu;
+    }
 }
