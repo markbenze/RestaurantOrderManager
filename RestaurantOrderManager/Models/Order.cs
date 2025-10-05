@@ -6,7 +6,9 @@ public class Order
     public int TableId { get; set; }
     public decimal Total { get; set; }
     public OrderState State { get; set; }
-    public List<CartItem> CartItems { get; set; }
+    public List<CartItem> CartItems { get; set; } = new();
+    
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
 }
 
 public enum OrderState

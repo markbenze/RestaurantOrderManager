@@ -1,32 +1,32 @@
 ﻿@page "/order/{TableId:int}"
 @rendermode InteractiveServer
 
-@if (PlacedOrder != null)
+@if (_placedOrder != null)
 {
     <h3>Order Confirmed</h3>
     <ul>
-        @foreach (var item in PlacedOrder.CartItems)
+        @foreach (var item in _placedOrder.CartItems)
         {
             <li>@item.Name x @item.Quantity = @item.Total €</li>
         }
     </ul>
-    <p><strong>Total:</strong> @PlacedOrder.Total €</p>
+    <p><strong>Total:</strong> @_placedOrder.Total €</p>
 }
 else
 {
-    <select @bind="SelectedMenuItemId">
+    <select @bind="_selectedMenuItemId">
         <option value="">-- Select item --</option>
         @foreach (var menu in MenuService.GetMenu())
         {
             <option value="@menu.Id">@menu.Name (@menu.Price €)</option>
         }
     </select>
-    <input type="number" @bind="Quantity" min="1" />
+    <input type="number" @bind="_quantity" min="1" />
 
     <button @onclick="AddItem">Add to Cart</button>
 
     <ul>
-        @foreach (var item in CartService.CartItems)
+        @foreach (var item in CartService.GetCartItems())
         {
             <li>@item.Name x @item.Quantity = @item.Total € 
                 <button @onclick="() => RemoveItem(item.Id)">Remove</button>
@@ -34,5 +34,19 @@ else
         }
     </ul>
 
-    <button @onclick="ConfirmOrder" disabled="@(CartService.CartItems.Count == 0)">Confirm Order</button>
+    <button @onclick="ConfirmOrder" disabled="@(CartService.GetCartItems().Count == 0)">Confirm Order</button>
 }
+<ol>
+    @foreach (var order in OrderService.GetOrders())
+    {
+        <li>
+            Order @order.Id for Table @order.TableId - Total: @order.Total €
+            <ul>
+                @foreach (var item in order.CartItems)
+                {
+                    <li>@item.Name x @item.Quantity = @item.Total €</li>
+                }
+            </ul>
+        </li>
+    }
+</ol>

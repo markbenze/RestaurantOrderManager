@@ -4,48 +4,71 @@ namespace RestaurantOrderManager.Services;
 
 public class CartService
 {
-    public List<CartItem> CartItems { get; } = new();
-
+    private List<CartItem> _cartItems { get; } = new();
     public event Action? OnChange;
 
+    private MenuService _menuService;
+    
+    public CartService(MenuService menuService)
+    {
+        this._menuService = menuService;
+    }
+    
     private void NotifyStateChanged() => OnChange?.Invoke();
     
-    public void AddMenuItem(MenuItem menuItem, int quantity = 1)
+    public void AddCartItem(int menuItemId, int quantity = 1)
     {
-        var existingItem = CartItems.FirstOrDefault(i => i.Id == menuItem.Id);
-        if (existingItem != null)
+        if (quantity < 0)
         {
-            existingItem.Quantity += quantity;
+            return;
         }
-        else
+
+        var menuItem = _menuService.GetMenuItem(menuItemId);
+        if (menuItem != null)
         {
-            CartItems.Add(new CartItem
+            var existingItem = _cartItems.FirstOrDefault(i => i.Id == menuItemId);
+            if (existingItem != null)
             {
-                Id = menuItem.Id,
-                Name = menuItem.Name,
-                Price = menuItem.Price,
-                Quantity = quantity
-            });
+                existingItem.Quantity += quantity;
+            }
+            else
+            {
+                _cartItems.Add(new CartItem
+                {
+                    Id = menuItem.Id,
+                    Name = menuItem.Name,
+                    Price = menuItem.Price,
+                    Quantity = quantity
+                });
+            } 
         }
         NotifyStateChanged();  
     }
     
     public void RemoveCartItem(int cartItemId)
     {
-        var item = CartItems.FirstOrDefault(i => i.Id == cartItemId);
+        var item = _cartItems.FirstOrDefault(i => i.Id == cartItemId);
         if (item != null)
         {
-            CartItems.Remove(item);
+            _cartItems.Remove(item);
         }
         NotifyStateChanged();  
     }
     
     public void ClearCart()
     {
-        CartItems.Clear();
+        _cartItems.Clear();
         NotifyStateChanged();  
     }
 
-    public decimal GetTotal() => CartItems.Sum(i => i.Total);
-    
+    public decimal GetTotal() => _cartItems.Sum(i => i.Total);
+
+    public List<CartItem> GetCartItems() => _cartItems.Select(item => new CartItem
+    {
+        Id = item.Id,
+        Name = item.Name,
+        Price = item.Price,
+        Quantity = item.Quantity
+    }).ToList();
+
 }

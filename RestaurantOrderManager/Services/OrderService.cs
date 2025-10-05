@@ -5,23 +5,24 @@ namespace RestaurantOrderManager.Services;
 
 public class OrderService
 {
-    private readonly MenuService _menuService;
+    private static int _nextOrderId = 1;
     
     private List<Order> _orders = new List<Order>();
-    
-    public OrderService(MenuService menuService)
-    {
-        this._menuService = menuService;
-    }
 
     public Order CreateOrder(int tableId, List<CartItem> cartItems)
     {
         var order = new Order
         {
-            Id = _orders.Count + 1,
+            Id = _nextOrderId++,
             TableId = tableId,
             State = OrderState.Pending,
-            CartItems = cartItems
+            CartItems = cartItems.Select(item => new CartItem
+            {
+                Id = item.Id,
+                Name = item.Name,
+                Price = item.Price,
+                Quantity = item.Quantity
+            }).ToList()
         };
 
         order.Total = order.CartItems.Sum(item => item.Total);
@@ -33,4 +34,14 @@ public class OrderService
     {
         _orders.Add(order);
     }
-}
+
+    public List<Order> GetOrders() => _orders.Select(o => new Order
+        {
+            Id = o.Id,
+            TableId = o.TableId,
+            Total = o.Total,
+            State = o.State,
+            CartItems = o.CartItems.ToList(),
+            CreatedAt = o.CreatedAt
+        }).ToList();
+    }

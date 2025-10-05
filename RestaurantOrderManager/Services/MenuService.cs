@@ -4,7 +4,7 @@ namespace RestaurantOrderManager.Services;
 
 public class MenuService
 {
-    private List<MenuItem> Menu { get; set; } = new List<MenuItem>()
+    private List<MenuItem> _menu { get; set; } = new List<MenuItem>()
     {
         new MenuItem
         {
@@ -35,11 +35,11 @@ public class MenuService
     
     public MenuItem? GetMenuItem(int id)
     {
-        return Menu.FirstOrDefault(p => p.Id == id);
+        return _menu.FirstOrDefault(p => p.Id == id);
     }
     
     public List<MenuItem> GetMenu()
     {
-        return Menu;
+        return _menu;
     }
 }
