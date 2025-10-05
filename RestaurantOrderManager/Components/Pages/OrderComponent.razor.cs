@@ -17,17 +17,17 @@ public partial class OrderComponent : IDisposable
 
     [Parameter] public int TableId { get; set; }
 
-    private int _selectedMenuItemId;
-    private int _quantity = 1;
     private Order? _placedOrder;
 
-    private void AddItem()
+    private Dictionary<int, int> Quantities = new();
+
+    private void AddToCart(int id, int quantity)
     {
-        CartService.AddCartItem(_selectedMenuItemId, _quantity);
-        _quantity = 1;
+        CartService.AddCartItem(id, quantity);
+        Quantities[id] = 1;
     }
 
-    private void RemoveItem(int cartItemId) => CartService.RemoveCartItem(cartItemId);
+    private void RemoveFromCart(int cartItemId) => CartService.RemoveCartItem(cartItemId);
 
     private void ConfirmOrder()
     {
@@ -36,9 +36,26 @@ public partial class OrderComponent : IDisposable
         CartService.ClearCart();
     }
 
+    public void Increment(int id)
+    {
+        Quantities[id]++;
+    }
+
+    public void Decrement(int id)
+    {
+        if (Quantities[id] > 1)
+        {
+            Quantities[id]--;
+        }
+    }
+
     protected override void OnInitialized()
     {
         CartService.OnChange += StateHasChanged;
+        foreach (var item in MenuService.GetMenu())
+        {
+            Quantities[item.Id] = 1;
+        }
     }
     
     public void Dispose()
