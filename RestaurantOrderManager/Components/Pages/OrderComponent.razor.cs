@@ -15,6 +15,9 @@ public partial class OrderComponent : IDisposable
     [Inject]
     public CartService CartService { get; set; }
 
+    [Inject]
+    public NavigationManager NavigationManager { get; set; }
+
     [Parameter] public int TableId { get; set; }
 
     private Order? _placedOrder;
@@ -33,16 +36,15 @@ public partial class OrderComponent : IDisposable
         _placedOrder = OrderService.CreateOrder(TableId, CartService.GetCartItems());
         OrderService.AddOrder(_placedOrder);
         CartService.ClearCart();
+        NavigationManager.NavigateTo("/order-history");
     }
 
     protected override void OnInitialized()
     {
-        CartService.OnChange += StateHasChanged;
     }
     
     public void Dispose()
     {
-        CartService.OnChange -= StateHasChanged;
         CartService.ClearCart();
     }
 }

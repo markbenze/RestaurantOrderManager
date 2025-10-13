@@ -7,9 +7,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .Services
-        .AddScoped<TableService>()
-        .AddScoped<MenuService>()
-        .AddScoped<OrderService>()
+        .AddSingleton<TableService>()
+        .AddSingleton<MenuService>()
+        .AddSingleton<OrderService>()
         .AddScoped<CartService>();
 
 var app = builder.Build();

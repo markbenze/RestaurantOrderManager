@@ -5,7 +5,7 @@ namespace RestaurantOrderManager.Services;
 public class CartService
 {
     private List<CartItem> _cartItems { get; } = new();
-    public event Action? OnChange;
+    //public event Action? OnChange;
 
     private MenuService _menuService;
     
@@ -14,7 +14,7 @@ public class CartService
         this._menuService = menuService;
     }
     
-    private void NotifyStateChanged() => OnChange?.Invoke();
+    //private void NotifyStateChanged() => OnChange?.Invoke();
     
     public void AddCartItem(int menuItemId, int quantity = 1)
     {
@@ -42,7 +42,7 @@ public class CartService
                 });
             } 
         }
-        NotifyStateChanged();  
+        //NotifyStateChanged();  
     }
 
     public void DecreaseCartItem(int cartItemId) {
@@ -57,7 +57,7 @@ public class CartService
             {
                 _cartItems.Remove(item);
             }
-            NotifyStateChanged();
+            //NotifyStateChanged();
         }
         else {
             return;
@@ -71,13 +71,13 @@ public class CartService
         {
             _cartItems.Remove(item);
         }
-        NotifyStateChanged();  
+        //NotifyStateChanged();  
     }
     
     public void ClearCart()
     {
         _cartItems.Clear();
-        NotifyStateChanged();  
+        //NotifyStateChanged();  
     }
 
     public decimal GetTotal() => _cartItems.Sum(i => i.Total);
