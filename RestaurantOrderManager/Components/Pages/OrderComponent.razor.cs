@@ -19,15 +19,14 @@ public partial class OrderComponent : IDisposable
 
     private Order? _placedOrder;
 
-    private Dictionary<int, int> Quantities = new();
-
-    private void AddToCart(int id, int quantity)
+    private void AddToCart(int id, int quantity = 1)
     {
         CartService.AddCartItem(id, quantity);
-        Quantities[id] = 1;
     }
 
     private void RemoveFromCart(int cartItemId) => CartService.RemoveCartItem(cartItemId);
+
+    private void DecreaseItemAmount(int cartItemId) => CartService.DecreaseCartItem(cartItemId);
 
     private void ConfirmOrder()
     {
@@ -36,26 +35,9 @@ public partial class OrderComponent : IDisposable
         CartService.ClearCart();
     }
 
-    public void Increment(int id)
-    {
-        Quantities[id]++;
-    }
-
-    public void Decrement(int id)
-    {
-        if (Quantities[id] > 1)
-        {
-            Quantities[id]--;
-        }
-    }
-
     protected override void OnInitialized()
     {
         CartService.OnChange += StateHasChanged;
-        foreach (var item in MenuService.GetMenu())
-        {
-            Quantities[item.Id] = 1;
-        }
     }
     
     public void Dispose()

@@ -44,7 +44,26 @@ public class CartService
         }
         NotifyStateChanged();  
     }
-    
+
+    public void DecreaseCartItem(int cartItemId) {
+        var item = _cartItems.FirstOrDefault(i => i.Id == cartItemId);
+        if (item != null)
+        {
+            if (item.Quantity > 1)
+            {
+                item.Quantity--;
+            }
+            else
+            {
+                _cartItems.Remove(item);
+            }
+            NotifyStateChanged();
+        }
+        else {
+            return;
+        }
+    }
+
     public void RemoveCartItem(int cartItemId)
     {
         var item = _cartItems.FirstOrDefault(i => i.Id == cartItemId);

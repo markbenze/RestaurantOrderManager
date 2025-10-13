@@ -4,7 +4,7 @@ using RestaurantOrderManager.Services;
 
 namespace RestaurantOrderManager.Components.Pages;
 
-public partial class Index
+public partial class TableView
 {
     private List<Table> Tables { get; set; }
 
