@@ -1,19 +1,18 @@
 ﻿using Microsoft.AspNetCore.Components;
-using RestaurantOrderManager.Models;
 using RestaurantOrderManager.Services;
+using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Components.Pages;
 
 public partial class TableView
 {
-    private List<Table> Tables { get; set; }
+    private List<Table> Tables = new();
 
     [Inject] 
     public TableService TableService { get; set; }
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        Tables = TableService.GetTables();
-        return Task.CompletedTask;
+        Tables = await TableService.GetTablesAsync();
     }
 }

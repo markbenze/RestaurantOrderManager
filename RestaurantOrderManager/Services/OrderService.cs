@@ -1,47 +1,22 @@
-﻿using Microsoft.AspNetCore.Components;
-using RestaurantOrderManager.Models;
+﻿using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Services;
 
 public class OrderService
 {
-    private static int _nextOrderId = 1;
+    private readonly HttpClient _httpClient;
     
-    private List<Order> _orders = new List<Order>();
-
-    public Order CreateOrder(int tableId, List<CartItem> cartItems)
-    {
-        var order = new Order
-        {
-            Id = _nextOrderId++,
-            TableId = tableId,
-            State = OrderState.Pending,
-            CartItems = cartItems.Select(item => new CartItem
-            {
-                Id = item.Id,
-                Name = item.Name,
-                Price = item.Price,
-                Quantity = item.Quantity
-            }).ToList()
-        };
-
-        order.Total = order.CartItems.Sum(item => item.Total);
-
-        return order;
+    public OrderService(HttpClient httpClient) {
+        _httpClient = httpClient;    
     }
 
-    public void AddOrder(Order order)
-    {
-        _orders.Add(order);
-    }
+    public async Task<List<Order>> GetOrdersAsync() => await _httpClient.GetFromJsonAsync<List<Order>>("api/order");
 
-    public List<Order> GetOrders() => _orders.Select(o => new Order
-        {
-            Id = o.Id,
-            TableId = o.TableId,
-            Total = o.Total,
-            State = o.State,
-            CartItems = o.CartItems.ToList(),
-            CreatedAt = o.CreatedAt
-        }).ToList();
-    }
+    public async Task AddOrderAsync(Order order) => await _httpClient.PostAsJsonAsync("api/order", order);
+
+    public async Task<Order> CreateOrderAsync(int id, List<CartItem> cartItems) {
+        var response = await _httpClient.PostAsJsonAsync($"api/order/new/{id}", cartItems);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<Order>();
+    } 
+}

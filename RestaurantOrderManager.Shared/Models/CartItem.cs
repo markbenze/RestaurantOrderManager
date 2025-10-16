@@ -1,4 +1,4 @@
-﻿namespace RestaurantOrderManager.Models;
+﻿namespace RestaurantOrderManager.Shared.Models;
 
 public class CartItem
 {

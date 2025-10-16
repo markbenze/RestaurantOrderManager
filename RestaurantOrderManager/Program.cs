@@ -3,14 +3,17 @@ using RestaurantOrderManager.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var baseaddress = builder.Configuration.GetValue<string>("ApiSettings:BaseAddress");
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .Services
-        .AddSingleton<TableService>()
-        .AddSingleton<MenuService>()
-        .AddSingleton<OrderService>()
-        .AddScoped<CartService>();
+    .AddSingleton<TableService>()
+    .AddSingleton<MenuService>()
+    .AddSingleton<OrderService>()
+    .AddScoped<CartService>()
+    .AddSingleton(sp => new HttpClient { BaseAddress = new Uri(baseaddress) });
 
 var app = builder.Build();
 

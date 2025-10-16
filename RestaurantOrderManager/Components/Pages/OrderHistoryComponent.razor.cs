@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using RestaurantOrderManager.Services;
+using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Components.Pages
 {
@@ -8,8 +9,11 @@ namespace RestaurantOrderManager.Components.Pages
         [Inject]
         public OrderService OrderService { get; set; }
 
-        protected override void OnInitialized()
+        private List<Order> Orders = new List<Order>();
+
+        protected override async Task OnInitializedAsync()
         {
+            Orders = await OrderService.GetOrdersAsync();
         }
 
         public async void DisposeAsync()

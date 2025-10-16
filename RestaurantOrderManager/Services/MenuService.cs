@@ -1,45 +1,20 @@
-﻿using RestaurantOrderManager.Models;
+﻿using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Services;
 
 public class MenuService
 {
-    private List<MenuItem> _menu { get; set; } = new List<MenuItem>()
-    {
-        new MenuItem
-        {
-            Id = 1, Name = "Margherita Pizza", Price = 8.99m,
-            Description = "Classic pizza with tomato sauce, mozzarella, and basil."
-        },
-        new MenuItem
-        {
-            Id = 2, Name = "Caesar Salad", Price = 6.49m,
-            Description = "Crisp romaine lettuce with Caesar dressing, croutons, and Parmesan cheese."
-        },
-        new MenuItem
-        {
-            Id = 3, Name = "Spaghetti Carbonara", Price = 10.99m,
-            Description = "Pasta with eggs, cheese, pancetta, and pepper."
-        },
-        new MenuItem
-        {
-            Id = 4, Name = "Grilled Chicken Sandwich", Price = 7.99m,
-            Description = "Grilled chicken breast with lettuce, tomato, and mayo on a toasted bun."
-        },
-        new MenuItem
-        {
-            Id = 5, Name = "Chocolate Lava Cake", Price = 5.49m,
-            Description = "Warm chocolate cake with a gooey chocolate center."
-        }
-    };
-    
-    public MenuItem? GetMenuItem(int id)
-    {
-        return _menu.FirstOrDefault(p => p.Id == id);
+    private readonly HttpClient _httpClient;
+
+    public MenuService(HttpClient httpClient) { 
+        _httpClient = httpClient;
     }
-    
-    public List<MenuItem> GetMenu()
-    {
-        return _menu;
+
+    public async Task<List<MenuItem>> GetMenuAsync() { 
+        return await _httpClient.GetFromJsonAsync<List<MenuItem>>("api/menu");
+    }
+
+    public async Task<MenuItem> GetMenuItemAsync(int id) { 
+        return await _httpClient.GetFromJsonAsync<MenuItem>($"api/menu/{id}");
     }
 }
