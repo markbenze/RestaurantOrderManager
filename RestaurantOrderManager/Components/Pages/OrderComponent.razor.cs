@@ -56,7 +56,6 @@ public partial class OrderComponent : IDisposable
     {
         var cartItems = await CartService.GetCartItemsAsync(TableId);
         var _placedOrder = await OrderService.CreateOrderAsync(TableId, cartItems);
-        await OrderService.AddOrderAsync(_placedOrder);
         await CartService.ClearCartAsync(TableId);
         NavigationManager.NavigateTo("/order-history");
         await LoadCartAsync();
@@ -64,6 +63,5 @@ public partial class OrderComponent : IDisposable
 
     public async void Dispose()
     {
-        await CartService.ClearCartAsync(TableId);
     }
 }

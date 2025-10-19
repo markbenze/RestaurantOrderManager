@@ -20,9 +20,9 @@
     {
         <li>
             @item.Quantity x @item.Name (@item.Price €) = @item.Total €
-            <button class="btn btn-secondary btn-sm" @onclick="() => DecreaseItemAmount(item.Id)">-</button>
-            <button class="btn btn-secondary btn-sm" @onclick="() => IncreaseItemAmount(item.Id)">+</button>
-            <button class="btn btn-danger btn-sm" @onclick="() => RemoveFromCart(item.Id)">x</button>
+            <button class="btn btn-secondary btn-sm" @onclick="() => DecreaseItemAmount(item.MenuItemId)">-</button>
+            <button class="btn btn-secondary btn-sm" @onclick="() => IncreaseItemAmount(item.MenuItemId)">+</button>
+            <button class="btn btn-danger btn-sm" @onclick="() => RemoveFromCart(item.MenuItemId)">x</button>
         </li>
     }
 </ul>

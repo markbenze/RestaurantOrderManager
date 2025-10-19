@@ -4,8 +4,9 @@ namespace RestaurantOrderManager.Api.Services
 {
     public interface ITableService
     {
-        List<Table> GetTables();
-
-        Table? GetTable(int id);
+        Task<List<Table>> GetTablesAsync();
+        Task<Table?> GetTableAsync(int id);
+        Task<Table> AddTableAsync(Table table);
+        Task<bool> RemoveTableAsync(int id);
     }
 }

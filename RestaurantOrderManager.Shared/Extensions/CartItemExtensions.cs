@@ -12,7 +12,8 @@ namespace RestaurantOrderManager.Shared.Extensions
         public static CartItem ToCartItem(this MenuItem menuItem, int quantity = 1) {
             return new CartItem
             {
-                Id = menuItem.Id,
+
+                MenuItemId = menuItem.Id,
                 Name = menuItem.Name,
                 Price = menuItem.Price,
                 Quantity = quantity

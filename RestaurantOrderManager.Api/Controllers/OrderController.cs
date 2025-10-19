@@ -17,26 +17,27 @@ namespace RestaurantOrderManager.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<Order>>> GetOrdersAsync() {
-            var orders = await Task.Run(() => _orderService.GetOrders());
+            var orders = await _orderService.GetOrdersAsync();
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrderAsync(int id) {
-            var order = await Task.Run(() => _orderService.GetOrder(id));
+        public async Task<ActionResult<Order>> GetOrderAsync(int id) {
+            var order = await _orderService.GetOrderAsync(id);
             return Ok(order);
         }
 
         [HttpPost("new/{id}")]
-        public async Task<IActionResult> CreateOrderAsync(int id, [FromBody] List<CartItem> cartItems)
+        public async Task<ActionResult<Order>> CreateOrderAsync(int id, [FromBody] List<CartItem> cartItems)
         {
-            var order = await Task.Run(() => _orderService.CreateOrder(id, cartItems));
-            return Ok(order);
+            var order = _orderService.CreateOrder(id, cartItems);
+            var result = await _orderService.AddOrderAsync(order);
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddOrderAsync([FromBody] Order order) { 
-            await Task.Run(() => _orderService.AddOrder(order));
+        public async Task<ActionResult<Order>> AddOrderAsync([FromBody] Order order) { 
+            await _orderService.AddOrderAsync(order);
             return Ok(order);
         }
     }

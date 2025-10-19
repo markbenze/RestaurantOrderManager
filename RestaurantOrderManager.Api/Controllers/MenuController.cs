@@ -17,13 +17,13 @@ namespace RestaurantOrderManager.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<MenuItem>>> GetMenuAsync() { 
-            var menu = await Task.Run(() => _menuService.GetMenu());
+            var menu = await _menuService.GetMenuAsync();
             return Ok(menu);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetMenuItemAsync(int id) {
-            var menuItem = await Task.Run(() => _menuService.GetMenuItem(id));
+        public async Task<ActionResult<MenuItem>> GetMenuItemAsync(int id) {
+            var menuItem = await _menuService.GetMenuItemAsync(id);
             return Ok(menuItem);
         }   
     }

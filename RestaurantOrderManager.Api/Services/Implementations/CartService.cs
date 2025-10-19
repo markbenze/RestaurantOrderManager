@@ -21,7 +21,7 @@ namespace RestaurantOrderManager.Api.Services.Implementations
         {
             var cart = _carts.GetOrAdd(tableId, new Cart { TableId = tableId, Items = new List<CartItem>() });
 
-            var existingItem = cart.Items.FirstOrDefault(i => i.Id == cartItem.Id);
+            var existingItem = cart.Items.FirstOrDefault(i => i.MenuItemId == cartItem.MenuItemId);
             
             if (existingItem != null) {
                 existingItem.Quantity += cartItem.Quantity;
@@ -33,7 +33,7 @@ namespace RestaurantOrderManager.Api.Services.Implementations
         public void RemoveItem(int tableId, int itemId)
         {
             if(_carts.TryGetValue(tableId, out var cart)) {
-                cart.Items.RemoveAll(i => i.Id == itemId);
+                cart.Items.RemoveAll(i => i.MenuItemId == itemId);
             }
         }
 
@@ -44,7 +44,7 @@ namespace RestaurantOrderManager.Api.Services.Implementations
 
         public void IncreaseQuantity(int tableId, int itemId) {
             if (_carts.TryGetValue(tableId, out var cart)) {
-                var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+                var item = cart.Items.FirstOrDefault(i => i.MenuItemId == itemId);
                 if (item != null) {
                     item.Quantity++;
                 }
@@ -54,7 +54,7 @@ namespace RestaurantOrderManager.Api.Services.Implementations
         public void DecreaseQuantity(int tableId, int itemId) {
             if (_carts.TryGetValue(tableId, out var cart))
             {
-                var item = cart.Items.FirstOrDefault(i => i.Id == itemId);
+                var item = cart.Items.FirstOrDefault(i => i.MenuItemId == itemId);
                 if (item != null)
                 {
                     if (item.Quantity > 1)

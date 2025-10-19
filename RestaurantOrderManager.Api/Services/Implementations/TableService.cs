@@ -1,33 +1,45 @@
-﻿using RestaurantOrderManager.Shared.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using RestaurantOrderManager.Api.Data;
+using RestaurantOrderManager.Shared.Models;
+using System.Threading.Tasks;
 
 namespace RestaurantOrderManager.Api.Services.Implementations
 {
     public class TableService: ITableService
     {
-        private List<Table> _tables = new List<Table>()
-    {
-        new Table { Id = 1, OrderNumber = 0, Status = TableStatus.Reserved },
-        new Table { Id = 2, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 3, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 4, OrderNumber = 0, Status = TableStatus.Occupied },
-        new Table { Id = 5, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 6, OrderNumber = 0, Status = TableStatus.Reserved },
-        new Table { Id = 7, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 8, OrderNumber = 0, Status = TableStatus.Reserved },
-        new Table { Id = 9, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 10, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 11, OrderNumber = 0, Status = TableStatus.Free },
-        new Table { Id = 12, OrderNumber = 0, Status = TableStatus.Free }
-    };
+        private readonly RestaurantDbContext _appDbContext;
 
-        public List<Table> GetTables()
+        public TableService(RestaurantDbContext appDbContext)
         {
-            return _tables;
+            _appDbContext = appDbContext;
         }
 
-        public Table? GetTable(int id)
+        public async Task<List<Table>> GetTablesAsync()
         {
-            return _tables.FirstOrDefault(t => t.Id == id);
+            return await _appDbContext.Tables.ToListAsync();
+        }
+
+        public async Task<Table?> GetTableAsync(int id)
+        {
+            return await _appDbContext.Tables.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<Table> AddTableAsync(Table table)
+        {
+            _appDbContext.Tables.Add(table);
+            await _appDbContext.SaveChangesAsync();
+
+            return table;
+        }
+        public async Task<bool> RemoveTableAsync(int id)
+        {
+            var table = await _appDbContext.Tables.FirstOrDefaultAsync(t => t.Id == id);
+            if (table == null)
+                return false;
+
+            _appDbContext.Tables.Remove(table);
+            await _appDbContext.SaveChangesAsync();
+            return true;
         }
 
         // public void ToggleTable(int id)

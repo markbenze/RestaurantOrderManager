@@ -18,14 +18,35 @@ namespace RestaurantOrderManager.Api.Controllers
 
         [HttpGet]
         public async Task<ActionResult<List<Table>>> GetTablesAsync() {
-            var tables = await Task.Run(() => _tableService.GetTables());
+            var tables = await _tableService.GetTablesAsync();
             return Ok(tables);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTableAsync(int id) {
-            var table = await Task.Run(() => _tableService.GetTable(id));
+        public async Task<ActionResult<Table>> GetTableAsync(int id) {
+            var table = await _tableService.GetTableAsync(id);
+            if (table == null) {
+                return NotFound();
+            }
             return Ok(table);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<Table>> AddTableAsync([FromBody] Table table)
+        {
+            var created = await _tableService.AddTableAsync(table);
+            return Created(string.Empty, created);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveTableAsync(int id)
+        {
+            var removed = await _tableService.RemoveTableAsync(id);
+
+            if (!removed) {
+                return NotFound();
+            }
+            return NoContent();
         }
     }
 }

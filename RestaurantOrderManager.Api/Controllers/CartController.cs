@@ -40,30 +40,30 @@ namespace RestaurantOrderManager.Api.Controllers
         }
 
         [HttpDelete("{tableId}/items/{itemId}")]
-        public IActionResult RemoveItem(int tableId, int itemId)
+        public async Task<IActionResult> RemoveItem(int tableId, int itemId)
         {
-            _cartService.RemoveItem(tableId, itemId);
+            await Task.Run(() => _cartService.RemoveItem(tableId, itemId));
             return Ok();
         }
 
         [HttpPost("{tableId}/items/{itemId}/increase")]
-        public IActionResult IncreaseQuantity(int tableId, int itemId)
+        public async Task<IActionResult> IncreaseQuantity(int tableId, int itemId)
         {
-            _cartService.IncreaseQuantity(tableId, itemId);
+            await Task.Run(() => _cartService.IncreaseQuantity(tableId, itemId));
             return Ok();
         }
 
         [HttpPost("{tableId}/items/{itemId}/decrease")]
-        public IActionResult DecreaseQuantity(int tableId, int itemId)
+        public async Task<IActionResult> DecreaseQuantity(int tableId, int itemId)
         {
-            _cartService.DecreaseQuantity(tableId, itemId);
+            await Task.Run(() => _cartService.DecreaseQuantity(tableId, itemId));
             return Ok();
         }
 
         [HttpDelete("{tableId}")]
-        public IActionResult ClearCart(int tableId)
+        public async Task<IActionResult> ClearCart(int tableId)
         {
-            _cartService.ClearCart(tableId);
+            await Task.Run(() => _cartService.ClearCart(tableId));
             return Ok();
         }
     }

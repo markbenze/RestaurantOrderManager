@@ -5,9 +5,8 @@ namespace RestaurantOrderManager.Api.Services
     public interface IOrderService
     {
         Order CreateOrder(int tableId, List<CartItem> cartItems);
-        void AddOrder(Order order);
-        List<Order> GetOrders();
-
-        Order? GetOrder(int id);
+        Task<Order> AddOrderAsync(Order order);
+        Task<List<Order>> GetOrdersAsync();
+        Task<Order?> GetOrderAsync(int id);
     }
 }
