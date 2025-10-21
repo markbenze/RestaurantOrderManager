@@ -5,7 +5,7 @@ using RestaurantOrderManager.Shared.Extensions;
 
 namespace RestaurantOrderManager.Components.Pages;
 
-public partial class OrderComponent : IDisposable
+public partial class OrderCreate
 {
     [Parameter] public int TableId { get; set; }
     
@@ -14,20 +14,19 @@ public partial class OrderComponent : IDisposable
     [Inject] public CartService CartService { get; set; }
     [Inject] public NavigationManager NavigationManager { get; set; }
 
+    private List<MenuItem> _menu = new();
+    private List<CartItem> _cartItems = new();
+    private decimal _cartTotal = 0;
 
-    private List<MenuItem> Menu = new();
-    private List<CartItem> CartItems = new();
-    private decimal CartTotal = 0;
-
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
-        Menu = await MenuService.GetMenuAsync();
+        _menu = await MenuService.GetMenuAsync();
         await LoadCartAsync();
     }
 
     private async Task LoadCartAsync() { 
-        CartItems = await CartService.GetCartItemsAsync(TableId);
-        CartTotal = await CartService.GetTotalAsync(TableId);
+        _cartItems = await CartService.GetCartItemsAsync(TableId);
+        _cartTotal = await CartService.GetTotalAsync(TableId);
         StateHasChanged();
     }
 
@@ -55,13 +54,12 @@ public partial class OrderComponent : IDisposable
     private async Task ConfirmOrder()
     {
         var cartItems = await CartService.GetCartItemsAsync(TableId);
-        var _placedOrder = await OrderService.CreateOrderAsync(TableId, cartItems);
+        
+        await OrderService.CreateOrderAsync(TableId, cartItems);
         await CartService.ClearCartAsync(TableId);
+        
         NavigationManager.NavigateTo("/order-history");
+        
         await LoadCartAsync();
-    }
-
-    public async void Dispose()
-    {
     }
 }

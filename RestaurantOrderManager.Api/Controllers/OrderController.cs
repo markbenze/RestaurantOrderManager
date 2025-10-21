@@ -22,20 +22,19 @@ namespace RestaurantOrderManager.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrderAsync(int id) {
-            var order = await _orderService.GetOrderAsync(id);
+        public async Task<ActionResult<Order>> GetOrderByIdAsync(int id) {
+            var order = await _orderService.GetOrderByIdAsync(id);
             return Ok(order);
         }
 
         [HttpPost("new/{id}")]
         public async Task<ActionResult<Order>> CreateOrderAsync(int id, [FromBody] List<CartItem> cartItems)
         {
-            var order = _orderService.CreateOrder(id, cartItems);
-            var result = await _orderService.AddOrderAsync(order);
-            return Ok(result);
+            var order = await _orderService.CreateAndAddOrderAsync(id, cartItems);
+            return Ok(order);
         }
 
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult<Order>> AddOrderAsync([FromBody] Order order) { 
             await _orderService.AddOrderAsync(order);
             return Ok(order);

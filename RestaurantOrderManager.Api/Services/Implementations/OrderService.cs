@@ -14,22 +14,12 @@ namespace RestaurantOrderManager.Api.Services.Implementations
             _appDbContext = appDbContext;
         }
 
-        public Order CreateOrder(int tableId, List<CartItem> cartItems)
+        public async Task<Order> CreateAndAddOrderAsync(int tableId, List<CartItem> cartItems)
         {
-            var order = new Order
-            {
-                TableId = tableId,
-                State = OrderState.Pending,
-                OrderItems = cartItems.Select(item => new OrderItem
-                {
-                    MenuItemId = item.MenuItemId,
-                    Name = item.Name,
-                    Price = item.Price,
-                    Quantity = item.Quantity
-                }).ToList()
-            };
+            var order = BuildOrder(tableId, cartItems);
 
-            order.Total = order.OrderItems.Sum(item => item.Total);
+            _appDbContext.Orders.Add(order);
+            await _appDbContext.SaveChangesAsync();
 
             return order;
         }
@@ -48,11 +38,30 @@ namespace RestaurantOrderManager.Api.Services.Implementations
                 .ToListAsync();
         }
     
-        public async Task<Order?> GetOrderAsync(int id)
+        public async Task<Order?> GetOrderByIdAsync(int id)
         {
             return await _appDbContext.Orders
                 .Include(o => o.OrderItems)
                 .FirstOrDefaultAsync(o => o.Id == id);
+        }
+    
+        private Order BuildOrder(int tableId, List<CartItem> cartItems)
+        {
+            var order = new Order
+            {
+                TableId = tableId,
+                State = OrderState.Pending,
+                OrderItems = cartItems.Select(item => new OrderItem
+                {
+                    MenuItemId = item.MenuItemId,
+                    Name = item.Name,
+                    Price = item.Price,
+                    Quantity = item.Quantity
+                }).ToList()
+            };
+
+            order.Total = order.OrderItems.Sum(item => item.Total);
+            return order;
         }
     }
 }

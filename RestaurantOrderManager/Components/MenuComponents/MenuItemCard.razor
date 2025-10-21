@@ -1,0 +1,12 @@
+﻿<div class="card h-100 shadow-sm">
+    <div class="card-body d-flex flex-column">
+        <h6 class="card-title">@Item.Name</h6>
+        <p class="card-text text-muted mb-3">@Item.Price.ToString("C")</p>
+        <div class="mt-auto d-grid">
+            <button class="btn btn-outline-primary" @onclick="RequestAddAsync">
+                <span class="bi bi-cart-plus"></span>
+                <span class="ms-2">Add</span>
+            </button>
+        </div>
+    </div>
+</div>

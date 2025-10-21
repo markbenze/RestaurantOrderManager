@@ -4,15 +4,15 @@ using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Components.Pages;
 
-public partial class TableView
+public partial class Tables
 {
-    private List<Table> Tables = new();
+    private List<Table> _tables = new();
 
     [Inject] 
     public TableService TableService { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Tables = await TableService.GetTablesAsync();
+        _tables = await TableService.GetTablesAsync();
     }
 }

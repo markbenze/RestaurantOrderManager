@@ -4,16 +4,16 @@ using RestaurantOrderManager.Shared.Models;
 
 namespace RestaurantOrderManager.Components.Pages
 {
-    public partial class OrderHistoryComponent
+    public partial class OrderHistory
     {
         [Inject]
         public OrderService OrderService { get; set; }
 
-        private List<Order> Orders = new List<Order>();
+        private List<Order> _orders = new List<Order>();
 
         protected override async Task OnInitializedAsync()
         {
-            Orders = await OrderService.GetOrdersAsync();
+            _orders = await OrderService.GetOrdersAsync();
         }
 
         public async void DisposeAsync()

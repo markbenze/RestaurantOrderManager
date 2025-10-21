@@ -1,0 +1,46 @@
+﻿<div class="card shadow-sm cart-card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Cart</strong>
+        <small class="text-muted">@(Items?.Count ?? 0) items</small>
+    </div>
+
+    <div class="card-body p-0">
+        @if (Items == null || Items.Count == 0)
+        {
+            <div class="p-3 text-center text-muted">Cart is empty</div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table table-sm mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Item</th>
+                            <th class="text-end">Qty</th>
+                            <th class="text-end">Line</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Items)
+                        {
+                           <CartItemCard
+                               Item="item"
+                               OnIncreaseRequested="ForwardIncrease"
+                               OnDecreaseRequested="ForwardDecrease"
+                               OnRemoveRequested="ForwardRemove">
+                           </CartItemCard>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+
+    <div class="card-footer d-flex justify-content-between align-items-center">
+        <div class="fw-bold">Total: @Total.ToString("C")</div>
+        <button class="btn btn-primary" @onclick="() => OnConfirmRequested.InvokeAsync()" disabled="@(Items == null || Items.Count == 0)">
+            Confirm
+        </button>
+    </div>
+</div>
