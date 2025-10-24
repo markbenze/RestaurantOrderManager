@@ -1,0 +1,24 @@
+﻿@page "/order/{TableId:int}"
+@using RestaurantOrderManager.Client.Components.MenuComponents
+@using RestaurantOrderManager.Client.Components.OrderComponents
+
+<div class="mb-3">
+    <h4 class="mb-0">Create Order — Table @TableId</h4>
+</div>
+
+<div class="row g-4">
+    <div class="col-12 col-lg-8">
+       <MenuView Menu="_menu" OnAddRequested="AddToCart"></MenuView>
+    </div>
+
+    <div class="col-12 col-lg-4">
+        <CartView 
+            Items="_cartItems" 
+            Total="_cartTotal" 
+            OnConfirmRequested="ConfirmOrder"
+            OnIncreaseRequested="IncreaseItemAmount"
+            OnDecreaseRequested="DecreaseItemAmount"
+            OnRemoveRequested="RemoveFromCart"
+        ></CartView>
+    </div>
+</div>
