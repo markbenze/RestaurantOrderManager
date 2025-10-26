@@ -1,0 +1,84 @@
+﻿@page "/admin-tables"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using RestaurantOrderManager.Client.Services
+@using RestaurantOrderManager.Shared.Models
+@inject TableService TableService
+@inject NavigationManager Navigation
+
+@code {
+    private List<Table> tables;
+    private Table newTable = new();
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadTables();
+    }
+
+    private async Task LoadTables()
+    {
+        tables = await TableService.GetTablesAsync();
+    }
+
+    private async Task AddTable()
+    {
+        try
+        {
+            await TableService.AddTableAsync(newTable);
+            newTable = new();
+            await LoadTables();
+        }
+        catch
+        {
+            errorMessage = "Failed to add table.";
+        }
+    }
+
+    private async Task RemoveTable(int id)
+    {
+        try
+        {
+            await TableService.RemoveTableAsync(id);
+            await LoadTables();
+        }
+        catch
+        {
+            errorMessage = "Failed to remove table.";
+        }
+    }
+}
+
+<h3>Admin Table Management</h3>
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="error">@errorMessage</div>
+}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Table Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (tables != null)
+        {
+            @foreach (var table in tables)
+            {
+                <tr>
+                    <td>@table.Id</td>
+                    <td>@(table.OrderNumber != 0 ? table.OrderNumber : "No Order for Table")</td>
+                    <td>@table.Status</td>
+                    <td>
+                        <button @onclick="() => RemoveTable(table.Id)">Remove</button>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+
+<h4>Add Table</h4>
+<button @onclick="AddTable">Add Table</button>
