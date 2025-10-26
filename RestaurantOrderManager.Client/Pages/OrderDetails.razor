@@ -1,0 +1,51 @@
+﻿@page "/order/details/{OrderId:int}"
+@using System.Globalization
+
+<h3 class="mb-4 fw-bold">Order #@_currentOrder.Id - Table @_currentOrder.TableId.</h3>
+
+<div class="mb-3">
+    <div><strong>State:</strong> @_currentOrder.State</div>
+    <div><strong>Date:</strong> @_currentOrder.CreatedAt.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture)</div>
+</div>
+
+<div class="mb-3">
+    <label class="form-label"><strong>Change Order State: </strong></label>
+    <div class="btn-group" role="group">
+        @foreach (var state in _orderStates)
+        {
+            <button class="btn btn-outline-primary me-1"
+                    disabled="@(_currentOrder.State == state)"
+                    @onclick="() => UpdateOrderState(state)">
+                @state
+            </button>
+        }
+    </div>
+</div>
+
+<table class="table table-striped">
+    <thead class="table-dark">
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in _currentOrder.OrderItems)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price €</td>
+                <td>@(item.Quantity * item.Price) €</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <NavLink class="btn btn-success" href="@($"/checkout/{_currentOrder.Id}")">
+        Checkout Page
+    </NavLink>
+</div>
