@@ -16,6 +16,76 @@ a, .btn-link {
     border-color: #1861ac;
 }
 
+.btn-primary {
+    background-color: #343a40;
+    border-color: #343a40;
+    font-weight: 600;
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    background-color: #495057;
+    border-color: #495057;
+    color: #ffd700;
+}
+
+.btn-outline-primary {
+    color: #343a40;
+    background-color: #fff;
+    border: 2px solid #343a40;
+    font-weight: 600;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+    background-color: #495057;
+    color: #ffd700;
+    border-color: #495057;
+}
+
+.btn-primary:disabled,
+.btn-primary.disabled {
+    background-color: #e9ecef;
+    border-color: #dee2e6;
+    color: #adb5bd;
+    opacity: 1;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+.btn-outline-primary:disabled,
+.btn-outline-primary.disabled {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    color: #adb5bd;
+    opacity: 1;
+    cursor: not-allowed;
+    font-weight: 600;
+}
+
+.cart-card {
+    overflow: hidden;
+}
+
+.card-header.bg-dark {
+    background-color: #343a40 !important;
+    color: #fff !important;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.card-footer.bg-light {
+    background-color: #f8f9fa !important;
+    border-top: 1px solid #dee2e6;
+}
+
+.table th, .table td {
+    vertical-align: middle !important;
+}
+
+.fw-semibold {
+    font-weight: 600;
+}
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }

@@ -1,18 +1,18 @@
-﻿ <tr>
-     <td class="align-middle">@Item.Name</td>
-     <td class="text-end align-middle">@Item.Quantity</td>
-     <td class="text-end align-middle">@((Item.Quantity * Item.Price).ToString("C"))</td>
-     <td class="align-middle text-end">
-         <div class="btn-group btn-group-sm" role="group" aria-label="Quantity controls">
-             <button class="btn btn-outline-secondary" title="Decrease" @onclick="RequestDecreaseAsync">
-                 <span class="bi bi-dash-lg" aria-hidden="true"></span>
-             </button>
-             <button class="btn btn-outline-secondary" title="Increase" @onclick="RequestIncreaseAsync">
-                 <span class="bi bi-plus-lg" aria-hidden="true"></span>
-             </button>
-             <button class="btn btn-outline-danger" title="Remove" @onclick="RequestRemoveAsync">
-                 <span class="bi bi-trash"></span>
-             </button>
-         </div>
-     </td>
- </tr>
+﻿<tr>
+    <td class="align-middle fw-semibold">@Item.Name</td>
+    <td class="text-end align-middle">@Item.Quantity</td>
+    <td class="text-end align-middle">@((Item.Quantity * Item.Price).ToString("C"))</td>
+    <td class="align-middle text-end">
+        <div class="btn-group btn-group-sm" role="group" aria-label="Quantity controls">
+            <button class="btn btn-outline-primary" title="Decrease" @onclick="RequestDecreaseAsync">
+                <span class="bi bi-dash-lg" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-outline-primary" title="Increase" @onclick="RequestIncreaseAsync">
+                <span class="bi bi-plus-lg" aria-hidden="true"></span>
+            </button>
+            <button class="btn btn-outline-danger" title="Remove" @onclick="RequestRemoveAsync">
+                <span class="bi bi-trash"></span>
+            </button>
+        </div>
+    </td>
+</tr>

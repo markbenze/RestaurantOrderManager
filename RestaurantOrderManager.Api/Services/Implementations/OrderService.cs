@@ -84,27 +84,25 @@ namespace RestaurantOrderManager.Api.Services.Implementations
                 if (order.State == state)
                     return order;
 
-                if (state == OrderState.Completed || state == OrderState.Cancelled)
-                {
-                    order.State = state;
-                    _appDbContext.Orders.Update(order);
-                    await _appDbContext.SaveChangesAsync();
+                var table = await _appDbContext.Tables.FirstOrDefaultAsync(t => t.Id == order.TableId);
 
-                    if (order.TableId != 0)
+                order.State = state;
+                _appDbContext.Orders.Update(order);
+                await _appDbContext.SaveChangesAsync();
+
+                if (table is not null)
+                {
+                    if (state == OrderState.Completed || state == OrderState.Cancelled)
                     {
-                        var table = await _appDbContext.Tables.FirstOrDefaultAsync(t => t.Id == order.TableId);
-                        if (table is not null)
-                        {
-                            table.Status = TableStatus.Free;
-                            table.OrderNumber = 0;
-                            _appDbContext.Tables.Update(table);
-                            await _appDbContext.SaveChangesAsync();
-                        }
+                        table.Status = TableStatus.Free;
+                        table.OrderNumber = 0;
                     }
-                }
-                else {
-                    order.State = state;
-                    _appDbContext.Orders.Update(order);
+                    else
+                    {
+                        table.Status = TableStatus.Occupied;
+                        table.OrderNumber = order.Id;
+                    }
+                    _appDbContext.Tables.Update(table);
                     await _appDbContext.SaveChangesAsync();
                 }
 

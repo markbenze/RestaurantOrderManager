@@ -1,0 +1,24 @@
+﻿@page "/"
+@inject NavigationManager Navigation
+
+<div class="login-container d-flex flex-column justify-content-center align-items-center min-vh-100">
+    <div class="app-title mb-5">
+        Restaurant Order<br />Manager
+    </div>
+    <div class="card login-card p-4" style="max-width: 400px; width: 100%;">
+        <EditForm Model="@_loginModel" OnValidSubmit="HandleLogin">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <InputText id="username" class="form-control" @bind-Value="_loginModel.Username" />
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <InputText id="password" type="password" class="form-control" @bind-Value="_loginModel.Password" />
+            </div>
+            <button class="btn btn-primary w-100" type="submit">Login</button>
+        </EditForm>
+    </div>
+</div>
