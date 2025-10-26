@@ -1,0 +1,31 @@
+﻿@page "/order/{TableId:int}"
+@rendermode InteractiveServer
+
+<div class="row">
+    @foreach (var menuItem in MenuService.GetMenu())
+    {
+        <div class="col-lg-2 col-md-6 col-sm-12 mb-4">
+            <div class="card d-flex flex-column h-100 shadow-sm bg-light">
+                <div class="card-body d-flex flex-column text-center">
+                    <h6 class="card-title">@menuItem.Name</h6>
+                    <p class="card-text">@menuItem.Price €</p>
+                    <button class="btn btn-outline-primary mt-auto" @onclick="() => AddToCart(menuItem.Id)">Add</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<ul>
+    @foreach (var item in CartService.GetCartItems())
+    {
+        <li>
+            @item.Quantity x @item.Name (@item.Price €) = @item.Total €
+            <button class="btn btn-secondary btn-sm" @onclick="() => DecreaseItemAmount(item.Id)">-</button>
+            <button class="btn btn-secondary btn-sm" @onclick="() => AddToCart(item.Id)">+</button>
+            <button class="btn btn-danger btn-sm" @onclick="() => RemoveFromCart(item.Id)">x</button>
+        </li>
+    }
+</ul>
+<p>Total: @CartService.GetTotal() €</p>
+<button @onclick="ConfirmOrder" disabled="@(CartService.GetCartItems().Count == 0)">Confirm Order</button>
+
