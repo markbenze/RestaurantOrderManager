@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using RestaurantOrderManager.Api.Services;
 using RestaurantOrderManager.Shared.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,20 +13,22 @@ namespace RestaurantOrderManager.Api.Controllers
 
     public class AuthController : ControllerBase
     {
-        [HttpPost("login")]
-        public IActionResult Login([FromBody] LoginModel model)
+        private readonly IUserService _userService;
+
+        public AuthController(IUserService userService)
         {
-            if (model.Username == "admin" && model.Password == "admin123")
-            {
-                var token = GenerateJwtToken(model.Username, "Admin");
-                return Ok(new { token });
-            }
-            if (model.Username == "staff" && model.Password == "staff123")
-            {
-                var token = GenerateJwtToken(model.Username, "Staff");
-                return Ok(new { token });
-            }
-            return Unauthorized();
+            _userService = userService;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        {
+            var user = await _userService.GetUserByUsernameAsync(model.Username);
+            if (user == null || user.PasswordHash != model.Password) 
+                return Unauthorized();
+
+            var token = GenerateJwtToken(user.Username, user.Role);
+            return Ok(new { token });
         }
 
         private string GenerateJwtToken(string username, string role)

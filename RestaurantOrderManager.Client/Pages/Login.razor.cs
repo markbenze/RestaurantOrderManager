@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.JSInterop;
+using RestaurantOrderManager.Client.Authentication;
 using RestaurantOrderManager.Shared.Models;
 using System.Net.Http.Json;
 
@@ -14,7 +15,7 @@ namespace RestaurantOrderManager.Client.Pages
         [Inject]private AuthenticationStateProvider AuthProvider { get; set; }
 
         private LoginModel _loginModel = new();
-        private string errorMessage;
+        private string errorMessage = "";
 
         private async Task HandleLogin()
         {
@@ -27,7 +28,7 @@ namespace RestaurantOrderManager.Client.Pages
                     var result = await response.Content.ReadFromJsonAsync<LoginResult>();
                     await JS.InvokeVoidAsync("localStorage.setItem", "authToken", result.token);
 
-                    if (AuthProvider is RestaurantOrderManager.Client.Authentication.JwtAuthenticationStateProvider jwtProvider)
+                    if (AuthProvider is JwtAuthenticationStateProvider jwtProvider)
                     {
                         jwtProvider.NotifyAuthenticationStateChanged();
                     }

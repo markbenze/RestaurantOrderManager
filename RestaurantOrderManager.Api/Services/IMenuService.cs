@@ -6,5 +6,7 @@ namespace RestaurantOrderManager.Api.Services
     {
         Task<List<MenuItem>> GetMenuAsync();
         Task<MenuItem?> GetMenuItemAsync(int id);
+        Task<MenuItem> AddMenuItemAsync(MenuItem item);
+        Task<bool> RemoveMenuItemAsync(int id);
     }
 }

@@ -28,6 +28,16 @@ namespace RestaurantOrderManager.Api.Controllers
             return Ok(order);
         }
 
+        [HttpGet("filter")]
+        public async Task<ActionResult<List<Order>>> GetOrdersByStatesAsync([FromQuery] List<OrderState> states)
+        {
+            if (states == null || states.Count == 0)
+                return BadRequest("At least one state must be specified.");
+
+            var orders = await _orderService.GetOrdersByStatesAsync(states);
+            return Ok(orders);
+        }
+
         [HttpPost("new/{tableId}")]
         public async Task<ActionResult<Order>> CreateOrderAsync(int tableId, [FromBody] List<CartItem> cartItems)
         {

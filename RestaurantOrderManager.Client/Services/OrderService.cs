@@ -15,6 +15,12 @@ public class OrderService
 
     public async Task<Order> GetOrderByIdAsync(int id) => await _httpClient.GetFromJsonAsync<Order>($"api/order/{id}");
 
+    public async Task<List<Order>> GetOrdersByStatesAsync(params OrderState[] states)
+    {
+        var query = string.Join("&", states.Select(s => $"states={s}"));
+        var url = $"api/order/filter?{query}";
+        return await _httpClient.GetFromJsonAsync<List<Order>>(url);
+    }
     public async Task AddOrderAsync(Order order) => await _httpClient.PostAsJsonAsync("api/order/add", order);
 
     public async Task UpdateOrderAsync(Order order) => await _httpClient.PatchAsync($"api/order/{order.Id}/state?state={order.State}", null);
@@ -22,5 +28,5 @@ public class OrderService
     public async Task<Order> CreateOrderAsync(int id, List<CartItem> cartItems) {
         var response = await _httpClient.PostAsJsonAsync($"api/order/new/{id}", cartItems);
         return await response.Content.ReadFromJsonAsync<Order>();
-    } 
+    }
 }

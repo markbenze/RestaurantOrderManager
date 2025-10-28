@@ -60,9 +60,19 @@ namespace RestaurantOrderManager.Api.Services.Implementations
         public async Task<List<Order>> GetOrdersAsync() {
             return await _appDbContext.Orders
                 .Include(o => o.OrderItems)
+                .OrderByDescending(o => o.CreatedAt)
                 .ToListAsync();
         }
-    
+
+        public async Task<List<Order>> GetOrdersByStatesAsync(List<OrderState> states)
+        {
+            return await _appDbContext.Orders
+                .Where(o => states.Contains(o.State))
+                .Include(o => o.OrderItems)
+                .OrderByDescending(o => o.CreatedAt)
+                .ToListAsync();
+        }
+
         public async Task<Order?> GetOrderByIdAsync(int id)
         {
             return await _appDbContext.Orders

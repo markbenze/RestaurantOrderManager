@@ -25,6 +25,23 @@ namespace RestaurantOrderManager.Api.Controllers
         public async Task<ActionResult<MenuItem>> GetMenuItemAsync(int id) {
             var menuItem = await _menuService.GetMenuItemAsync(id);
             return Ok(menuItem);
-        }   
+        }
+        
+        [HttpPost]
+        public async Task<ActionResult<MenuItem>> AddMenuItemAsync([FromBody] MenuItem item)
+        {
+            var addedItem = await _menuService.AddMenuItemAsync(item);
+            return Created(string.Empty, addedItem);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveMenuItemAsync(int id)
+        {
+            var removed = await _menuService.RemoveMenuItemAsync(id);
+            if (!removed) {
+                return NotFound();
+            }
+            return NoContent();
+        }
     }
 }

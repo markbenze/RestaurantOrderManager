@@ -21,6 +21,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IOrderService, OrderService>()
     .AddScoped<IMenuService, MenuService>()
     .AddScoped<ITableService, TableService>()
+    .AddScoped<IUserService, UserService>()
     .AddSingleton<ICartService, CartService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

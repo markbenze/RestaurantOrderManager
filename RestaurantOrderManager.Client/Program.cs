@@ -14,14 +14,44 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 
 builder.Services
-    .AddScoped<MenuService>()
-    .AddScoped<OrderService>()
-    .AddScoped<CartService>()
-    .AddScoped(sp => new HttpClient { BaseAddress = new Uri("http://localhost:5094/") })
+    .AddTransient<JwtAuthorizationMessageHandler>();
+
+builder.Services
+    .AddHttpClient("ApiClient", client =>
+        client.BaseAddress = new Uri("http://localhost:5094/")
+    )
+    .AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
+
+builder.Services
+    .AddScoped(sp =>
+        sp.GetRequiredService<IHttpClientFactory>()
+          .CreateClient("ApiClient")
+    );
+
+builder.Services
     .AddScoped<TableService>(sp =>
         new TableService(
-            sp.GetRequiredService<HttpClient>(),
-            sp.GetRequiredService<IJSRuntime>()
+            sp.GetRequiredService<HttpClient>()
+        )
+    )
+    .AddScoped<OrderService>(sp =>
+        new OrderService(
+            sp.GetRequiredService<HttpClient>()
+        )
+    )
+    .AddScoped<MenuService>(sp =>
+        new MenuService(
+            sp.GetRequiredService<HttpClient>()
+        )
+    )
+    .AddScoped<CartService>(sp =>
+        new CartService(
+            sp.GetRequiredService<HttpClient>()
+        )
+    )
+    .AddScoped<UserService>(sp =>
+        new UserService(
+            sp.GetRequiredService<HttpClient>()
         )
     );
 

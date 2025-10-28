@@ -1,0 +1,68 @@
+﻿@page "/manage-users"
+@attribute [Authorize(Roles = "Admin")]
+@using Microsoft.AspNetCore.Authorization
+@using RestaurantOrderManager.Shared.Models
+@using RestaurantOrderManager.Client.Services
+@inject UserService UserService
+
+<h3 class="mt-4 mb-3 text-center">Manage Users</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger text-center">@errorMessage</div>
+}
+
+<div class="container">
+    <table class="table table-striped table-hover border text-center mt-4">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (users != null)
+            {
+                @foreach (var user in users)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.Username</td>
+                        <td>@user.Role</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" @onclick="() => RemoveUser(user.Id)">
+                                <i class="bi bi-trash me-1"></i> Remove
+                            </button>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <div class="card mt-5 mx-auto" style="max-width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title mb-3">Add User</h5>
+            <div class="mb-3">
+                <label class="form-label">Username</label>
+                <input class="form-control" @bind="newUser.Username" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input class="form-control" @bind="newUser.PasswordHash" type="password" />
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Role</label>
+                <select class="form-select" @bind="newUser.Role">
+                    <option value="Admin">Admin</option>
+                    <option value="Staff">Staff</option>
+                </select>
+            </div>
+            <button class="btn btn-success w-100" @onclick="AddUser">
+                <i class="bi bi-person-plus me-1"></i> Add User
+            </button>
+        </div>
+    </div>
+</div>

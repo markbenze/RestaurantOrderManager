@@ -18,4 +18,14 @@ public class MenuService
     public async Task<MenuItem> GetMenuItemAsync(int id) { 
         return await _httpClient.GetFromJsonAsync<MenuItem>($"api/menu/{id}");
     }
+
+    public async Task<MenuItem> AddMenuItemAsync(MenuItem item)
+    {
+        var response = await _httpClient.PostAsJsonAsync("api/menu", item);
+        return await response.Content.ReadFromJsonAsync<MenuItem>();
+    }
+    public async Task<bool> RemoveMenuItemAsync(int id) {
+        var response = await _httpClient.DeleteAsync($"api/menu/{id}");
+        return response.IsSuccessStatusCode;
+    }
 }

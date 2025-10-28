@@ -8,20 +8,40 @@ namespace RestaurantOrderManager.Client.Pages
     {
         [Parameter] public int OrderId { get; set; }
         [Inject] public OrderService OrderService { get; set; }
+        [Inject] public NavigationManager Navigation { get; set; }
 
         private Order _currentOrder = new();
-
-        private List<OrderState> _orderStates = Enum.GetValues<OrderState>().ToList();
 
         protected override async Task OnParametersSetAsync()
         {
             _currentOrder = await OrderService.GetOrderByIdAsync(OrderId);
         }
-
-        public async Task UpdateOrderState(OrderState newState)
+        private async Task CancelOrder()
         {
-            _currentOrder.State = newState;
-            await OrderService.UpdateOrderAsync(_currentOrder);
+            if (_currentOrder != null)
+            {
+                _currentOrder.State = OrderState.Cancelled;
+                await OrderService.UpdateOrderAsync(_currentOrder);
+                StateHasChanged();
+            }
+        }
+
+        private async Task SendToKitchen()
+        {
+            if (_currentOrder != null)
+            {
+                _currentOrder.State = OrderState.InProgress;
+                await OrderService.UpdateOrderAsync(_currentOrder);
+                StateHasChanged();
+            }
+        }
+
+        private void GoToCheckout()
+        {
+            if (_currentOrder != null)
+            {
+                Navigation.NavigateTo($"/checkout/{_currentOrder.Id}");
+            }
         }
     }
 }

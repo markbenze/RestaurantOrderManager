@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
+@using RestaurantOrderManager.Client.Authentication
 
 @inject IJSRuntime JS
 @inject NavigationManager Navigation
@@ -59,6 +60,32 @@
         color: #ffd700;
         text-decoration: none;
     }
+
+    .logout-btn {
+        background: none;
+        color: #adb5bd;
+        font-weight: 400;
+        border: none;
+        border-radius: 0.25rem;
+        width: 100%;
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .logout-btn:hover, .logout-btn:focus {
+        background-color: #495057;
+        color: #ffd700;
+        outline: none;
+    }
+
+    .logout-btn .bi {
+        margin-right: 0.5rem;
+        font-size: 1.1rem;
+    }
 </style>
 
 <nav class="sidebar-nav">
@@ -73,6 +100,12 @@
             </NavLink>
         </li>
         <li class="nav-item mb-2">
+            <NavLink class="nav-link" href="/active-orders">
+                <i class="bi bi-lightning"></i>
+                Active Orders
+            </NavLink>
+        </li>
+        <li class="nav-item mb-2">
             <NavLink class="nav-link" href="/order-history">
                 <i class="bi bi-clock-history"></i>
                 Order History
@@ -80,13 +113,26 @@
         </li>
         <AuthorizeView Roles="Admin">
             <li class="nav-item mb-2">
-                <NavLink class="nav-link" href="/admin-tables">
+                <NavLink class="nav-link" href="/manage-tables">
+                    <i class="bi bi-gear"></i>
                     Manage Tables
                 </NavLink>
             </li>
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link" href="/manage-users">
+                <i class="bi bi-people"></i>
+                Manage Users
+            </NavLink>
+        </li>
+        <li class="nav-item mb-2">
+            <NavLink class="nav-link" href="/menu-editor">
+                <i class="bi bi-list"></i>
+                Manage Menu
+            </NavLink>
+        </li>
         </AuthorizeView>
         <li class="nav-item mt-4">
-            <button class="btn btn-outline-light w-100" @onclick="Logout">
+            <button class="logout-btn" @onclick="Logout">
                 <i class="bi bi-box-arrow-right"></i> Logout
             </button>
         </li>
@@ -97,7 +143,7 @@
     private async Task Logout()
     {
         await JS.InvokeVoidAsync("localStorage.clear");
-        if (AuthProvider is RestaurantOrderManager.Client.Authentication.JwtAuthenticationStateProvider jwtProvider)
+        if (AuthProvider is JwtAuthenticationStateProvider jwtProvider)
         {
             jwtProvider.NotifyAuthenticationStateChanged();
         }
