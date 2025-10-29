@@ -58,7 +58,7 @@ public partial class OrderCreate
         await OrderService.CreateOrderAsync(TableId, cartItems);
         await CartService.ClearCartAsync(TableId);
         
-        NavigationManager.NavigateTo("/order-history");
+        NavigationManager.NavigateTo("/active-orders");
         
         await LoadCartAsync();
     }

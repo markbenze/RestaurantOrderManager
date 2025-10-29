@@ -53,6 +53,11 @@ builder.Services
         new UserService(
             sp.GetRequiredService<HttpClient>()
         )
+    )
+    .AddScoped<ReservationService>(sp =>
+        new ReservationService(
+            sp.GetRequiredService<HttpClient>()
+        )
     );
 
 await builder.Build().RunAsync();

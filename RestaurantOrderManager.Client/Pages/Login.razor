@@ -5,6 +5,12 @@
         Restaurant Order<br />Manager
     </div>
     <div class="card login-card p-4" style="max-width: 400px; width: 100%;">
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger text-center mb-3">
+                @errorMessage
+            </div>
+        }
         <EditForm Model="@_loginModel" OnValidSubmit="HandleLogin">
             <DataAnnotationsValidator />
             <ValidationSummary />

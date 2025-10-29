@@ -35,7 +35,18 @@ namespace RestaurantOrderManager.Api.Services.Implementations
                 await _appDbContext.SaveChangesAsync();
 
                 table.OrderNumber = order.Id;
-                table.Status = TableStatus.Occupied;
+                
+                var reservation = _appDbContext.Reservations
+                    .Where(r => r.TableId == tableId && r.IsActive).FirstOrDefault();
+
+                if (reservation != null)
+                {
+                    table.Status = TableStatus.Reserved;
+                }
+                else {
+                    table.Status = TableStatus.Occupied;
+                }
+
                 _appDbContext.Tables.Update(table);
                 await _appDbContext.SaveChangesAsync();
 
@@ -102,17 +113,32 @@ namespace RestaurantOrderManager.Api.Services.Implementations
 
                 if (table is not null)
                 {
-                    if (state == OrderState.Completed || state == OrderState.Cancelled)
+                    if (table.Status == TableStatus.Reserved)
                     {
-                        table.Status = TableStatus.Free;
-                        table.OrderNumber = 0;
+                        if (state == OrderState.Completed || state == OrderState.Cancelled)
+                        {
+                            table.OrderNumber = 0;
+                        }
+                        else
+                        {
+                            table.OrderNumber = order.Id;
+                        }
+                        _appDbContext.Tables.Update(table);
                     }
                     else
                     {
-                        table.Status = TableStatus.Occupied;
-                        table.OrderNumber = order.Id;
+                        if (state == OrderState.Completed || state == OrderState.Cancelled)
+                        {
+                            table.Status = TableStatus.Free;
+                            table.OrderNumber = 0;
+                        }
+                        else
+                        {
+                            table.Status = TableStatus.Occupied;
+                            table.OrderNumber = order.Id;
+                        }
+                        _appDbContext.Tables.Update(table);
                     }
-                    _appDbContext.Tables.Update(table);
                     await _appDbContext.SaveChangesAsync();
                 }
 

@@ -1,0 +1,48 @@
+﻿@page "/reservation/details/{TableId:int}"
+@using RestaurantOrderManager.Shared.Models
+
+<h3 class="mt-4 mb-3 text-center">Reservation Details</h3>
+
+@if (IsLoading)
+{
+    <div class="text-center my-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+}
+else if (_reservation == null)
+{
+    <div class="alert alert-warning text-center mt-4">
+        No active reservation found for this table.
+    </div>
+}
+else
+{
+    <div class="card mx-auto mt-4" style="max-width: 400px;">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><strong>Table:</strong> @_reservation.TableId</h5>
+            <p class="mb-2"><strong>Name: </strong>@_reservation.Name</p>
+            <p class="mb-2"><strong>Reservation Time:</strong> @_reservation.ReservationTime.ToString("f")</p>
+            <p class="mb-2">
+                <strong>Status:</strong>
+                <span>
+                    @( _reservation.IsActive ? "Active" : "Inactive" )
+                </span>
+            </p>
+            @if (_reservation.IsActive)
+            {
+                <button class="btn btn-outline-primary w-100 mb-2" @onclick="CreateOrder" disabled="@(_table.OrderNumber != 0)">
+                    Create Order
+                </button>
+                <button class="btn btn-outline-danger w-100" @onclick="CancelReservation" disabled="@IsCancelling">
+                    Cancel Reservation
+                </button>
+            }
+            @if (!string.IsNullOrEmpty(CancelMessage))
+            {
+                <div class="alert alert-info mt-3">@CancelMessage</div>
+            }
+        </div>
+    </div>
+}

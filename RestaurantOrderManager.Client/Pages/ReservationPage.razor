@@ -1,0 +1,76 @@
+﻿@page "/reservations"
+@using RestaurantOrderManager.Shared.Models
+
+<h3 class="mt-4 mb-3 text-center">Reservations</h3>
+
+<div class="container mt-4">
+    <div class="row">
+        @foreach (var table in _tables)
+        {
+            <div class="col-md-3 col-sm-6 mb-4">
+                <div class="card border shadow-sm bg-light">
+                    <div class="card-body text-center">
+                        <h5 class="card-title">Table @table.Id</h5>
+                        <p class="fw-bold">Status: @table.Status</p>
+                        @if (table.Status != TableStatus.Reserved)
+                        {
+                            <button class="btn btn-outline-success w-100" @onclick="() => ShowReservationDialog(table.Id)">Reserve</button>
+                        }
+                        else if (table.Status == TableStatus.Reserved)
+                        {
+                            <button class="btn btn-info w-100" @onclick="() => GoToReservationDetails(table.Id)">
+                                Details
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-outline-secondary w-100" disabled>Not Available</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@if (ShowDialog)
+{
+    <div class="modal show d-block" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Reserve Table @DialogTableId</h5>
+                    <button type="button" class="btn-close" @onclick="CloseDialog"></button>
+                </div>
+                <div class="modal-body">
+                    <label>Name:</label>
+                    <input class="form-control mb-2" @bind="ReservationName" placeholder="Your name" />
+
+                    <label>Date:</label>
+                    <InputDate @bind-Value="ReservationDate" class="form-control mb-2" />
+
+                    <label>Hour:</label>
+                    <select class="form-select mb-2" @bind="SelectedHour">
+                        @foreach (var hour in AvailableHours)
+                        {
+                            <option value="@hour">@hour</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" @onclick="ReserveTable">Confirm Reservation</button>
+                    <button class="btn btn-secondary" @onclick="CloseDialog">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-backdrop show"></div>
+}
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <div class="alert alert-danger mt-3">@ErrorMessage</div>
+}
+@if (SuccessMessage != null)
+{
+    <div class="alert alert-success mt-3">@SuccessMessage</div>
+}
